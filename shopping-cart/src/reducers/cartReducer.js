@@ -8,6 +8,8 @@ import item6 from "../images/item6.jpg";
 // action types
 const GET_CART = "GET_CART";
 const ADD_TO_CART = "ADD_TO_CART";
+const ADD_QUANTITY = "ADD_QUANTITY";
+const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 
 // action creators
 export const addToCart = id => {
@@ -16,6 +18,13 @@ export const addToCart = id => {
     id
   };
 };
+
+export const removeFromCart = id => {
+  return {
+    type: REMOVE_FROM_CART,
+    id
+  }
+}
 
 const initState = {
   items: [
@@ -97,6 +106,15 @@ const cartReducer = (state = initState, action) => {
             total: newTotal
           };
         }
+        case REMOVE_FROM_CART:
+          let newItems = state.addedItems.filter(item => item.id !== action.id);
+          let removed = state.addedItems.find(item => item.id === action.id)
+          let newTotal = state.total - removed.price
+          return {
+            ...state,
+            addedItems: newItems,
+            total: newTotal
+          }
       default:
         return state;
     }

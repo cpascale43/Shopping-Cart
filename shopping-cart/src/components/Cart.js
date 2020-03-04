@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import { removeFromCart } from "../reducers/cartReducer";
 
 class Cart extends Component {
+  handleClick(id) {
+    this.props.removeFromCart(id);
+  }
 
   render() {
     let addedItems = this.props.items.length ? (
@@ -12,7 +16,6 @@ class Cart extends Component {
             <div className="item-img">
               <img src={item.imgUrl} alt={item.imgUrl} />
             </div>
-
             <div className="item-desc">
               <span className="title">{item.title}</span>
               <p>{item.desc}</p>
@@ -22,6 +25,13 @@ class Cart extends Component {
               <p>
                 <b>Quantity: {item.quantity}</b>
               </p>
+              <button
+                onClick={() => {
+                  this.handleClick(item.id);
+                }}
+              >
+                Remove
+              </button>
             </div>
           </div>
         );
@@ -41,10 +51,18 @@ class Cart extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapDispatch = dispatch => {
+  return {
+    removeFromCart: id => {
+      dispatch(removeFromCart(id));
+    }
+  };
+};
+
+const mapState = state => {
   return {
     items: state.addedItems
   };
 };
 
-export default connect(mapStateToProps)(Cart);
+export default connect(mapState, mapDispatch)(Cart);
